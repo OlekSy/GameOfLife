@@ -66,7 +66,7 @@ public class Game extends Thread {
         }
     }
 
-    public void refreshBoard(){
+    private void refreshBoard(){
         for(int i = 0; i < board[0].length; i++){
             for(int j = 0; j < board.length; j++){
                 if(board[j][i] == 0){
@@ -74,54 +74,135 @@ public class Game extends Thread {
                 } else {
                     gc.fillRect(j * widthOfCell + 1, i * heightOfCell + 1, heightOfCell - 2, widthOfCell - 2);
                 }
+//                try {
+//                    Thread.sleep(10);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
             }
         }
+    }
+
+    private boolean boardIsChanged(){
+        boolean isChanged = false;
+        for (int i = 0; i < board[0].length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                int counter = 0;
+                if (j > 0) {
+                    if (i > 0) {
+                        counter += board[j - 1][i - 1];
+                    }
+                    counter += board[j - 1][i];
+                    if (i < board[0].length - 1) {
+                        counter += board[j - 1][i + 1];
+                    }
+                }
+                if (i > 0) {
+                    counter += board[j][i - 1];
+                }
+                if (i < board[0].length - 1) {
+                    counter += board[j][i + 1];
+                }
+                if (j < board.length - 1) {
+                    if (i > 0) {
+                        counter += board[j + 1][i - 1];
+                    }
+                    counter += board[j + 1][i];
+                    if (i < board[0].length - 1) {
+                        counter += board[j + 1][i + 1];
+                    }
+                }
+                if (counter <= 1 || counter >= 4) {
+                    if(board[j][i] == 1) {
+                        board[j][i] = 0;
+                        isChanged = true;
+                    }
+                }
+                //Check if it's okay
+                else {
+                    boolean found = true;
+                    int randomNum = 0;
+                    while(found){
+                        randomNum = ThreadLocalRandom.current().nextInt(1, 9);
+                        if(!((i == 0 && (randomNum == 6 || randomNum == 7 || randomNum == 8))
+                                || (j == 0 && (randomNum == 3 || randomNum == 5 || randomNum == 8))
+                                || (i == board[0].length - 1 && (randomNum == 1 || randomNum == 2 || randomNum == 3))
+                                || (j == board.length - 1 && (randomNum == 1 || randomNum == 4 || randomNum == 6)))){
+                            found = false;
+                        }
+                    }
+                    switch (randomNum) {
+                        case 1: {
+                            board[j + 1][i + 1] = 1;
+                            break;
+                        }
+                        case 2: {
+                            board[j][i + 1] = 1;
+                            break;
+                        }
+                        case 3: {
+                            board[j - 1][i + 1] = 1;
+                            break;
+                        }
+                        case 4: {
+                            board[j + 1][i] = 1;
+                            break;
+                        }
+                        case 5: {
+                            board[j - 1][i] = 1;
+                            break;
+                        }
+                        case 6: {
+                            board[j + 1][i - 1] = 1;
+                            break;
+                        }
+                        case 7: {
+                            board[j][i - 1] = 1;
+                            break;
+                        }
+                        case 8: {
+                            board[j - 1][i - 1] = 1;
+                            break;
+                        }
+                    }
+//                    if (j > 0) {
+//                        if (i > 0) {
+//                            board[j - 1][i - 1] = 1;
+//                        }
+//                        board[j - 1][i] = 1;
+//                        if (i < board[0].length - 1) {
+//                            board[j - 1][i + 1] = 1;
+//                        }
+//                    }
+//                    if (i > 0) {
+//                        board[j][i - 1] = 1;
+//                    }
+//                    if (i < board[0].length - 1) {
+//                        board[j][i + 1] = 1;
+//                    }
+//                    if (j < board.length - 1) {
+//                        if (i > 0) {
+//                            board[j + 1][i - 1] = 1;
+//                        }
+//                        board[j + 1][i] = 1;
+//                        if (i < board[0].length - 1) {
+//                            board[j + 1][i + 1] = 1;
+//                        }
+//                    }
+                }
+            }
+        }
+        return isChanged;
     }
 
     @Override
     public void run(){
         boolean isChanged = true;
         while(isChanged) {
-            isChanged = false;
-            System.out.println("Iteration");
-            for (int i = 0; i < board[0].length; i++) {
-                for (int j = 0; j < board.length; j++) {
-                    int counter = 0;
-                    if (j > 0) {
-                        if (i > 0) {
-                            counter += board[j - 1][i - 1];
-                        }
-                        counter += board[j - 1][i];
-                        if (i < board[0].length - 1) {
-                            counter += board[j - 1][i + 1];
-                        }
-                    }
-                    if (i > 0) {
-                        counter += board[j][i - 1];
-                    }
-                    if (i < board[0].length - 1) {
-                        counter += board[j][i + 1];
-                    }
-                    if (j < board.length - 1) {
-                        if (i > 0) {
-                            counter += board[j + 1][i - 1];
-                        }
-                        counter += board[j + 1][i];
-                        if (i < board[0].length - 1) {
-                            counter += board[j + 1][i + 1];
-                        }
-                    }
-                    if (counter <= 1 || counter >= 4) {
-                        if(board[j][i] == 1) {
-                            board[j][i] = 0;
-                            isChanged = true;
-                        }
-                    }
-                }
-            }
-            Platform.runLater(this::refreshBoard);
+            isChanged = boardIsChanged();
+            refreshBoard();
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
