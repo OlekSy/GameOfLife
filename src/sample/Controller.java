@@ -26,6 +26,6 @@ public class Controller {
 
     //Function of button
     public void buttonOnAction(){
-        game.run();
+        game.start();
     }
 }
