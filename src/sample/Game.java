@@ -3,7 +3,9 @@ package sample;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,27 +65,60 @@ public class Game extends Thread {
         }
     }
 
-
+    public void refreshBoard(){
+        for(int i = 0; i < board[0].length; i++){
+            for(int j = 0; j < board.length; j++){
+                if(board[j][i] == 0){
+                    gc.clearRect(j * widthOfCell + 1, i * heightOfCell + 1, heightOfCell - 2, widthOfCell - 2);
+                } else {
+                    gc.fillRect(j * widthOfCell + 1, i * heightOfCell + 1, heightOfCell - 2, widthOfCell - 2);
+                }
+            }
+        }
+    }
 
     @Override
     public void run(){
-//        initializeGame();
-//        System.out.println("It started");
-//        for(int i = 0; i < board[0].length; i++){
-//            for(int j = 0; j < board.length; j++){
-//                int counter = 0;
-//                counter += board[i - 1][j - 1];
-//                counter += board[i - 1][j];
-//                counter += board[i - 1][j + 1];
-//                counter += board[i][j - 1];
-//                counter += board[i][j + 1];
-//                counter += board[i + 1][j - 1];
-//                counter += board[i + 1][j];
-//                counter += board[i + 1][j + 1];
-//                if(counter == 2 || counter == 3){
-//
-//                }
-//            }
-//        }
+        boolean isChanged = true;
+        while(isChanged) {
+            isChanged = false;
+            System.out.println("Iteration");
+            for (int i = 0; i < board[0].length; i++) {
+                for (int j = 0; j < board.length; j++) {
+                    int counter = 0;
+                    if (j > 0) {
+                        if (i > 0) {
+                            counter += board[j - 1][i - 1];
+                        }
+                        counter += board[j - 1][i];
+                        if (i < board[0].length - 1) {
+                            counter += board[j - 1][i + 1];
+                        }
+                    }
+                    if (i > 0) {
+                        counter += board[j][i - 1];
+                    }
+                    if (i < board[0].length - 1) {
+                        counter += board[j][i + 1];
+                    }
+                    if (j < board.length - 1) {
+                        if (i > 0) {
+                            counter += board[j + 1][i - 1];
+                        }
+                        counter += board[j + 1][i];
+                        if (i < board[0].length - 1) {
+                            counter += board[j + 1][i + 1];
+                        }
+                    }
+                    if (counter <= 1 || counter >= 4) {
+                        if(board[j][i] == 1) {
+                            board[j][i] = 0;
+                            isChanged = true;
+                        }
+                    }
+                }
+            }
+            refreshBoard();
+        }
     }
 }

@@ -4,12 +4,14 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
 public class Controller {
 
-    Main main;
-    GraphicsContext gc;
-    Game game;
+    private Main main;
+    private GraphicsContext gc;
+    private Game game;
+    private Stage stage;
 
     @FXML Button btn;
     @FXML Canvas canvas;
@@ -25,10 +27,5 @@ public class Controller {
     //Function of button
     public void buttonOnAction(){
         game.run();
-    }
-
-    //Set main as main
-    public void setMain(Main main){
-        this.main = main;
     }
 }
