@@ -22,6 +22,7 @@ public class Controller {
 
         //Starting game
         game = new Game(gc);
+        game.setDaemon(true);
     }
 
     //Function of button

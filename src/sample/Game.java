@@ -165,30 +165,6 @@ public class Game extends Thread {
                             break;
                         }
                     }
-//                    if (j > 0) {
-//                        if (i > 0) {
-//                            board[j - 1][i - 1] = 1;
-//                        }
-//                        board[j - 1][i] = 1;
-//                        if (i < board[0].length - 1) {
-//                            board[j - 1][i + 1] = 1;
-//                        }
-//                    }
-//                    if (i > 0) {
-//                        board[j][i - 1] = 1;
-//                    }
-//                    if (i < board[0].length - 1) {
-//                        board[j][i + 1] = 1;
-//                    }
-//                    if (j < board.length - 1) {
-//                        if (i > 0) {
-//                            board[j + 1][i - 1] = 1;
-//                        }
-//                        board[j + 1][i] = 1;
-//                        if (i < board[0].length - 1) {
-//                            board[j + 1][i + 1] = 1;
-//                        }
-//                    }
                 }
             }
         }
